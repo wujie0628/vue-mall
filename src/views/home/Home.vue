@@ -6,9 +6,10 @@
     <home-swiper :banners="banners"></home-swiper>
     <home-recommend :recommends="recommends"></home-recommend>
     <popular></popular>
-    <tab-control :tabs="['流行', '新款', '精选']"></tab-control>
+    <tab-control :tabs="['流行', '新款', '精选']" @tabClick="tabClick"></tab-control>
+    <goods-list :goodsList="goods[currentType].list"></goods-list>
   </div>
-  
+   
 </template>
 
 <script>
@@ -17,8 +18,9 @@
   import HomeRecommend from "./childComps/HomeRecommend"
   import Popular from "./childComps/Popular"
   import TabControl from "components/content/tabControl/TabControl"
-  
-  import {getHomeMultidata} from "network/home"
+  import GoodsList from "components/content/goodsList/GoodsList"
+   
+  import {getHomeMultidata, getHomeData} from "network/home"
   
   export default {
     components: {
@@ -26,21 +28,64 @@
       HomeSwiper,
       HomeRecommend,
       Popular,
-      TabControl
+      TabControl,
+      GoodsList
     },
     data() {
       return {
         banners: [],
-        recommends: []
+        recommends: [],
+        goods: {
+          pop: {page: 0, list: []},
+          new: {page: 0, list: []},
+          sell: {page: 0, list: []},
+        },
+        currentType: "pop"
       }
     },
     created() {
-      getHomeMultidata().then(res => {
-        // console.log(res.data);
-        this.banners = res.data.banner.list
-        this.recommends = res.data.recommend.list
-      })
-    }
+      //获取banner图以及推荐列表
+     this.getHomeMultidata()
+
+      //获取流行、新款、精选数据
+     this.getHomeData('pop')
+     this.getHomeData('new')
+     this.getHomeData('sell')
+    },
+    methods: {
+      /**
+       * 事件点击相关
+       */
+      tabClick(index) {
+        switch(index) {
+          case 0:
+            this.currentType = "pop";
+            break;
+          case 1:
+            this.currentType = "new";
+            break;
+          case 2:
+            this.currentType = "sell";
+            break;
+        }
+      },
+      /**
+       * 网络相关
+       */
+      getHomeMultidata() {
+        getHomeMultidata().then(res => {
+          this.banners = res.data.banner.list
+          this.recommends = res.data.recommend.list
+        })
+      },
+      getHomeData(type) {
+        const reqPage = this.goods[type].page + 1
+        getHomeData(type, reqPage).then(res => { 
+          this.goods[type].list.push(...res.data.list)
+          this.goods[type].page =+ 1
+        })
+      }
+    },
   }
 </script>
 
@@ -49,7 +94,7 @@
     padding-top: 44px;
   }
   
-  .home-nav {
+  .home-nav { 
     background-color: var(--color-tint);
     color: #fff;
     
@@ -63,5 +108,6 @@
   .tab-control {
     position: sticky;
     top: 44px;
+    z-index: 9;
   }
 </style>
