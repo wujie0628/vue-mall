@@ -1,15 +1,20 @@
 <template>
   <div id="home">
+
     <nav-bar class="home-nav">
-      <div slot="center">购物街</div>      
+      <div slot="center">购物街</div>
     </nav-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <home-recommend :recommends="recommends"></home-recommend>
-    <popular></popular>
-    <tab-control :tabs="['流行', '新款', '精选']" @tabClick="tabClick"></tab-control>
-    <goods-list :goodsList="goods[currentType].list"></goods-list>
+    <scroll class="content">
+      <home-swiper :banners="banners"></home-swiper>
+      <home-recommend :recommends="recommends"></home-recommend>
+      <popular></popular>
+      <tab-control :tabs="['流行', '新款', '精选']" @tabClick="tabClick"></tab-control class="tab-control">
+      <goods-list :goodsList="goods[currentType].list"></goods-list>
+    </scroll>
+    
+    
   </div>
-   
+
 </template>
 
 <script>
@@ -19,9 +24,13 @@
   import Popular from "./childComps/Popular"
   import TabControl from "components/content/tabControl/TabControl"
   import GoodsList from "components/content/goodsList/GoodsList"
-   
-  import {getHomeMultidata, getHomeData} from "network/home"
-  
+  import Scroll from "components/common/scroll/Scroll"
+
+  import {
+    getHomeMultidata,
+    getHomeData
+  } from "network/home"
+
   export default {
     components: {
       NavBar,
@@ -29,35 +38,45 @@
       HomeRecommend,
       Popular,
       TabControl,
-      GoodsList
+      GoodsList,
+      Scroll
     },
     data() {
       return {
         banners: [],
         recommends: [],
         goods: {
-          pop: {page: 0, list: []},
-          new: {page: 0, list: []},
-          sell: {page: 0, list: []},
+          pop: {
+            page: 0,
+            list: []
+          },
+          new: {
+            page: 0,
+            list: []
+          },
+          sell: {
+            page: 0,
+            list: []
+          },
         },
         currentType: "pop"
       }
     },
     created() {
       //获取banner图以及推荐列表
-     this.getHomeMultidata()
+      this.getHomeMultidata()
 
       //获取流行、新款、精选数据
-     this.getHomeData('pop')
-     this.getHomeData('new')
-     this.getHomeData('sell')
+      this.getHomeData('pop')
+      this.getHomeData('new')
+      this.getHomeData('sell')
     },
     methods: {
       /**
        * 事件点击相关
        */
       tabClick(index) {
-        switch(index) {
+        switch (index) {
           case 0:
             this.currentType = "pop";
             break;
@@ -80,34 +99,47 @@
       },
       getHomeData(type) {
         const reqPage = this.goods[type].page + 1
-        getHomeData(type, reqPage).then(res => { 
+        getHomeData(type, reqPage).then(res => {
           this.goods[type].list.push(...res.data.list)
-          this.goods[type].page =+ 1
+          this.goods[type].page = +1
         })
       }
     },
   }
 </script>
 
-<style>
+<style scoped>
   #home {
-    padding-top: 44px;
+    padding-top: 44px; 
+    height: 100vh;
+    position: relative;
   }
-  
-  .home-nav { 
+
+  .home-nav {
     background-color: var(--color-tint);
     color: #fff;
-    
+
     position: fixed;
     left: 0;
     right: 0;
     top: 0;
     z-index: 9;
   }
-  
+
   .tab-control {
     position: sticky;
     top: 44px;
     z-index: 9;
+  }
+
+  .content {
+    overflow: hidden;
+
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
+
   }
 </style>
