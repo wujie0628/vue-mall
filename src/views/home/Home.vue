@@ -80,6 +80,12 @@
       this.getHomeData('new')
       this.getHomeData('sell')
     },
+    mounted() {
+      //监听列表图片加载完成事件
+      this.$bus.$on("goodsItemImgLoad", ()=>{
+        this.$refs.scroll.refresh();
+      })
+    },
     methods: {
       /**
        * 事件点击相关

@@ -46,11 +46,15 @@
     },
     methods: {
       toTop(time) {
-        this.scroll.scrollTo(0, 0, time);
+        this.scroll && this.scroll.scrollTo(0, 0, time);
       },
       
       finishPullUp() {
-        this.scroll.finishPullUp()
+        this.scroll && this.scroll.finishPullUp();
+      },
+      
+      refresh() {
+        this.scroll && this.scroll.refresh();
       }
     },
   }
