@@ -4,7 +4,12 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content">
+    <scroll class="content" 
+            ref="scroll" 
+            :probeType="3" 
+            @scroll="scroll" 
+            :pullUpLoad="true"
+            @pullingUp="loadMore">
       <home-swiper :banners="banners"></home-swiper>
       <home-recommend :recommends="recommends"></home-recommend>
       <popular></popular>
@@ -12,6 +17,7 @@
       <goods-list :goodsList="goods[currentType].list"></goods-list>
     </scroll>
     
+    <back-top @click.native="toTop" v-show="isShowBackTop"/>
     
   </div>
 
@@ -25,6 +31,7 @@
   import TabControl from "components/content/tabControl/TabControl"
   import GoodsList from "components/content/goodsList/GoodsList"
   import Scroll from "components/common/scroll/Scroll"
+  import BackTop from "components/content/backTop/BackTop"
 
   import {
     getHomeMultidata,
@@ -39,7 +46,8 @@
       Popular,
       TabControl,
       GoodsList,
-      Scroll
+      Scroll,
+      BackTop
     },
     data() {
       return {
@@ -59,7 +67,8 @@
             list: []
           },
         },
-        currentType: "pop"
+        currentType: "pop",
+        isShowBackTop: false
       }
     },
     created() {
@@ -88,6 +97,17 @@
             break;
         }
       },
+      toTop() {
+        this.$refs.scroll.toTop(300);
+      },
+      
+      scroll(position) {
+        this.isShowBackTop = (-position.y) > 1000
+      },
+      
+      loadMore() {
+        this.getHomeData(this.currentType);
+      },
       /**
        * 网络相关
        */
@@ -101,7 +121,9 @@
         const reqPage = this.goods[type].page + 1
         getHomeData(type, reqPage).then(res => {
           this.goods[type].list.push(...res.data.list)
-          this.goods[type].page = +1
+          this.goods[type].page += 1
+          
+          this.$refs.scroll.finishPullUp()
         })
       }
     },
@@ -138,8 +160,9 @@
     position: absolute;
     top: 44px;
     bottom: 49px;
-    left: 0;
+    left: 0;   
     right: 0;
 
   }
-</style>
+</style>  
+ 

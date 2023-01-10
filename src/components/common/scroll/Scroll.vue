@@ -17,12 +17,42 @@
       }
     },
     
+    props: {
+      probeType: {
+        type: Number,
+        default: 0 
+      },
+      pullUpLoad: {
+        type: Boolean,
+        default: false
+      }
+    },
+    
     mounted() {
       
       this.scroll = new BScroll(this.$refs.wrapper, {
-        
+        click: true,
+        probeType: this.probeType,
+        pullUpLoad: this.pullUpLoad
+      }),
+      
+      this.scroll.on("scroll", positon => {
+        this.$emit("scroll", positon);
+      }),
+      
+      this.scroll.on("pullingUp", () => {
+        this.$emit("pullingUp")
       })
-    }
+    },
+    methods: {
+      toTop(time) {
+        this.scroll.scrollTo(0, 0, time);
+      },
+      
+      finishPullUp() {
+        this.scroll.finishPullUp()
+      }
+    },
   }
 </script>
 
