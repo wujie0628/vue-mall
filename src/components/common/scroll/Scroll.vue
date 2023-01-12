@@ -45,8 +45,12 @@
       })
     },
     methods: {
+      scrollTo(x, y, time) {
+        this.scroll && this.scroll.scrollTo(x, y, time);
+      },
       toTop(time) {
-        this.scroll && this.scroll.scrollTo(0, 0, time);
+        // this.scroll && this.scroll.scrollTo(0, 0, time);
+        this.scrollTo(0, 0, time)
       },
       
       finishPullUp() {
@@ -55,6 +59,9 @@
       
       refresh() {
         this.scroll && this.scroll.refresh();
+      },
+      getScrollY() {
+        return this.scroll ? this.scroll.y : 0
       }
     },
   }
