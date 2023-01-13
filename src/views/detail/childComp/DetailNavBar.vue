@@ -29,7 +29,6 @@
     },
     methods: {
       backClick() {
-        console.log("backClick");
         this.$router.back();
       },
       titleClick(index) {
