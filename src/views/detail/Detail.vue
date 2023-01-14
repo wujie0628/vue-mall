@@ -9,6 +9,7 @@
       <detail-param-info :paramInfo="paramInfo" ref="params"></detail-param-info>
       <goods-list :goodsList="recommend" ref="recommend"></goods-list>
     </scroll>
+    <detail-bottom-bar></detail-bottom-bar>
   </div>
 </template>
 
@@ -19,8 +20,11 @@
   import DetailShopInfo from "./childComp/DetailShopInfo"
   import DetailGoodsInfo from "./childComp/DetailGoodsInfo"
   import DetailParamInfo from "./childComp/DetailParamInfo"
+  import DetailBottomBar from "./childComp/DetailBottomBar"
+  
   import GoodsList from "components/content/goodsList/GoodsList"
   import Scroll from "components/common/scroll/Scroll"
+  
   import {getDetail, getRecommend, Goods, Shop, GoodsParam} from "network/detail"
   import {itemListenterMixin} from "common/mixin"
 import { debounce } from "@/common/utils"
@@ -51,6 +55,7 @@ import { debounce } from "@/common/utils"
       DetailGoodsInfo,
       DetailParamInfo,
       GoodsList,
+      DetailBottomBar,
       Scroll
     },
     
@@ -142,7 +147,7 @@ import { debounce } from "@/common/utils"
   }
   
   .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 44px - 49px);
   }
   
   .detail-nav-bar {
