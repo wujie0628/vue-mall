@@ -34,7 +34,7 @@
     getHomeMultidata,
     getHomeData
   } from "network/home"
-
+  
   import {itemListenterMixin} from "common/mixin"
   
   export default {

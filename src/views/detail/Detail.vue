@@ -9,7 +9,9 @@
       <detail-param-info :paramInfo="paramInfo" ref="params"></detail-param-info>
       <goods-list :goodsList="recommend" ref="recommend"></goods-list>
     </scroll>
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar @addCart="addCart"></detail-bottom-bar>
+    
+    <back-top @click.native="toTop" v-show="isShowBackTop" />
   </div>
 </template>
 
@@ -24,6 +26,7 @@
   
   import GoodsList from "components/content/goodsList/GoodsList"
   import Scroll from "components/common/scroll/Scroll"
+  import BackTop from "components/content/backTop/BackTop"
   
   import {getDetail, getRecommend, Goods, Shop, GoodsParam} from "network/detail"
   import {itemListenterMixin} from "common/mixin"
@@ -42,7 +45,8 @@ import { debounce } from "@/common/utils"
         recommend: [],
         themeTopYs: [],
         getThemeTopY: null,
-        datailNavBarCurrentIndex: 0
+        datailNavBarCurrentIndex: 0,
+        isShowBackTop: false,
       }
     },
      
@@ -56,6 +60,7 @@ import { debounce } from "@/common/utils"
       DetailParamInfo,
       GoodsList,
       DetailBottomBar,
+      BackTop,
       Scroll
     },
     
@@ -106,6 +111,8 @@ import { debounce } from "@/common/utils"
         this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 300)
       },
       contentScroll(position) {
+        
+        //处理顶部标题根据滑动位置改变样式
         let index = 0;
         
         let index0 = this.themeTopYs[0];
@@ -128,6 +135,23 @@ import { debounce } from "@/common/utils"
           this.$refs.detailNavBar.setCurrentIndex(index)
           this.datailNavBarCurrentIndex = index
         }
+        
+        //是否显示向上小箭头
+        this.isShowBackTop = (-position.y) > 1000
+      },
+      toTop() {
+        this.$refs.scroll.toTop(300);
+      },
+      
+      addCart() {
+        const product = {};
+        product.image = this.topImages[0];
+        product.title = this.goods.title;
+        product.desc = this.goods.desc;
+        product.price = this.goods.realPrice;
+        product.iid = this.iid; 
+        product.num = 1;
+        this.$store.dispatch("addCart", product);
       }
     },
     
