@@ -29,15 +29,14 @@
   import GoodsList from "components/content/goodsList/GoodsList"
   import Scroll from "components/common/scroll/Scroll"
   import BackTop from "components/content/backTop/BackTop"
-
+  
   import {
     getHomeMultidata,
     getHomeData
   } from "network/home"
 
-  import {
-    debounce
-  } from "common/utils"
+  import {itemListenterMixin} from "common/mixin"
+  
   export default {
     components: {
       NavBar,
@@ -49,6 +48,7 @@
       Scroll,
       BackTop
     },
+    mixins: [itemListenterMixin],
     data() {
       return {
         banners: [],
@@ -84,12 +84,14 @@
       this.getHomeData('sell')
     },
     mounted() {
-      const refresh = debounce(this.$refs.scroll.refresh, 100)
+      // const refresh = debounce(this.$refs.scroll.refresh, 100)
 
-      //监听列表图片加载完成事件
-      this.$bus.$on("goodsItemImgLoad", () => {
-        refresh()
-      })
+      // //对监听事件进行保存
+      // this.itemImgListener = () => {
+      //   refresh()
+      // }
+      // //监听列表图片加载完成事件
+      // this.$bus.$on("goodsItemImgLoad", this.itemImgListener)
 
     },
     methods: {
@@ -157,7 +159,8 @@
     },
     deactivated() {
       this.saveY = this.$refs.scroll.getScrollY();
-      
+      //取消全局事件的监听
+      this.$bus.$off('goodsItemImgLoad', this.itemImgListener)
     },
 
   }

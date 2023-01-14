@@ -33,6 +33,10 @@
       },
       titleClick(index) {
         this.currentIndex = index;
+        this.$emit('navBarClick', index);
+      },
+      setCurrentIndex(index) {
+        this.currentIndex = index;
       }
     },
   }
