@@ -1,7 +1,7 @@
 <template>
   <div class="cart-list">
     <scroll class="content" ref="scroll">
-      <cart-list-item v-for="(item, index) in cartList" :product="item"></cart-list-item>
+      <cart-list-item v-for="(item, index) in cartList" :itemInfo="item"></cart-list-item>
     </scroll>
   </div>
 </template>
@@ -14,6 +14,12 @@
   
   export default {
     name: "CartList",
+    data() {
+      return {
+      }
+    },
+    created() {
+    },
     components: {
       Scroll,
       CartListItem
