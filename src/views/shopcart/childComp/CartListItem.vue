@@ -1,7 +1,7 @@
 <template>
   <div id="shop-item">
-    <div class="item-selector">
-      <check-button></check-button>
+    <div class="item-selector" @click="checkButtonClick">
+      <check-button :isChecked="itemInfo.isChecked"></check-button>
     </div>
     <div class="item-img">
       <img :src="itemInfo.image" alt="商品图片">
@@ -29,6 +29,12 @@
         type: Object,
         default: {}
       },
+    },
+    
+    methods: {
+      checkButtonClick() {
+        this.itemInfo.isChecked = !this.itemInfo.isChecked
+      }
     },
   }
 </script>
