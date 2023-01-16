@@ -12,6 +12,7 @@
     <detail-bottom-bar @addCart="addCart"></detail-bottom-bar>
     
     <back-top @click.native="toTop" v-show="isShowBackTop" />
+    
   </div>
 </template>
 
@@ -30,7 +31,7 @@
   
   import {getDetail, getRecommend, Goods, Shop, GoodsParam} from "network/detail"
   import {itemListenterMixin} from "common/mixin"
-import { debounce } from "@/common/utils"
+  import { debounce } from "@/common/utils"
   
   export default {
     name: "Detail",
@@ -151,7 +152,9 @@ import { debounce } from "@/common/utils"
         product.price = this.goods.realPrice;
         product.iid = this.iid; 
         product.num = 1;
-        this.$store.dispatch("addCart", product);
+        this.$store.dispatch("addCart", product).then(res => {
+          this.$toast.show(res)
+        })
       }
     },
     
